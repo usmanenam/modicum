@@ -1,0 +1,20 @@
+PF04447     # MazG (Covers MazZ) [dATP/dGTP pyrophosphohydrolase]
+PF18909     # [dGTP_diPhyd_Nterm]
+PF00709     # Adenylsucc_synt (Covers PurA AND PurZ) [Adenylosuccinate synthetase]
+PF12917     # DatZ ATPase [YfbR-like 5'-deoxynucleotidase]
+PF23859     # TGT (DpdA family) [DeoxyPurine in DNA protein A]
+PF06508     # QueC
+PF01242     # PTPS (QueD)
+PF01639     # QueE
+PF02649     # GTP_Cyc_Hydrolase (FolE) [Type I GTP cyclohydrolase folE2]
+PF13522     # Gat [glutamine amidotransferase]
+PF11440     # Alpha_GT
+PF09198     # Beta_GT (Glucosyltransferase)
+PF00201     # Glucosyl_transf_1 (Alternative GT family) UDP-glucoronosyl and UDP-glucosyl transferase
+PF00535     # Glycosyl transferase family 2
+PF12851     # TET_JBP (Base J/5hmU)
+PF00303     # ThyA
+PF18880     # Uracil DNA glycosylase inhibitor
+PF22769		# dcd
+PF00383		# dCMP_cyt_deam_1
+PF25680		# Mom
