@@ -7,9 +7,9 @@ MODICUM predicts non-canonical DNA modifications in bacteriophage genomes by sea
 *   **dZ (2-aminoadenine)**: PurZ pathway.
 *   **7-dG (7-deazaguanine)**: DpdA/Que cluster.
 *   **5(hm)Y**: Hydroxymethylated, hydroxylated or methylated pyrimidines + glycosylation.
-*   **dU (Deoxyuracil)**: UGI / dcd (tested).
-*   **dI (Deoxyinosine)**: dGMP_reductase / dAMP_deaminase (tested).
-*   **Momylation**: Mu-like Mom (tested).
+*   **dU (Deoxyuracil)**: UGI / dcd (not tested).
+*   **dI (Deoxyinosine)**: dGMP_reductase / dAMP_deaminase (not tested).
+*   **Momylation**: Mu-like Mom (not tested).
 *   **Base J**: JBP/TET pathway (not tested).
 
 ## Installation
