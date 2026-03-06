@@ -27,8 +27,8 @@ HMM_MAP = {
     "PF00709":  ("PurA/PurZ_Generic", "Z-Base"),
     "PF04447":  ("MazG-like", "Z-Base"),
     "PF18909":  ("MazG-like-Nt", "Z-Base"),
-    "PF12917":  ("DatZ", "Z-Base"),
-    # "NF038380": ("DpoZ", "Z-Base"),
+    "PF12917":  ("DatZ", "Z-Base"), #5'-deoxynucleotidase YfbR-like
+    # "NF038380": ("DpoZ", "Z-Base"), # would perhaps need to finetine otherwise pulling out all polymerases
 
     # --- 7-dG ---
     "PF23859":   ("DpdA (TGT)", "7-dG"),
@@ -38,7 +38,6 @@ HMM_MAP = {
     "PF06508":   ("QueC", "7-dG"),
     "PF01242":   ("QueD", "7-dG"),
     "TIGR03367": ("QueD", "7-dG"),
-    "PF01639":   ("QueE", "7-dG"),
     "TIGR03365": ("QueE", "7-dG"),
     "TIGR04322": ("QueE", "7-dG"),
     "NF006824":  ("FolE", "7-dG"),

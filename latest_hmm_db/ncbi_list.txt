@@ -1,16 +1,15 @@
-NF038380.1    # DpoZ
-NF038379.2    # PurZ (Specific Z-base synthase)
-NF041059.1    # DpdA tRNA-guanine transglycosylase 
-TIGR00364.1    # QueC (PreQ0 Synthase)
-NF008317.0    # QueC alternative model
-TIGR03367.1    # QueD [6-carboxytetrahydropterin synthase QueD]
-TIGR03365.1    # QueE
-TIGR04322.1    # QueE alternative model
-TIGR03138.1    # QueF
-TIGR03139.1    # QueF alternative model
-NF006824.0    # FolE [GTP cyclohydrolase I FolE]
-NF040592.1    # arcS
-NF002499.0   # thyA
-TIGR00551.1    # dGMP reductase
-TIGR01078.1    # dAMP deaminase
-TIGR00576.1    # dGTAPase
+NF038379    # PurZ (Specific Z-base synthase)
+NF041059    # DpdA tRNA-guanine transglycosylase 
+TIGR00364    # QueC (PreQ0 Synthase)
+NF008317    # QueC alternative model
+TIGR03367    # QueD [6-carboxytetrahydropterin synthase QueD]
+TIGR03365    # QueE
+TIGR04322    # QueE alternative model
+NF006824    # FolE [GTP cyclohydrolase I FolE]
+TIGR03138    # QueF
+TIGR03139    # QueF alternative model
+NF040592    # arcS
+NF002499   # thyA
+TIGR00551    # dGMP reductase
+TIGR01078    # dAMP deaminase
+TIGR00576    # dGTAPase
