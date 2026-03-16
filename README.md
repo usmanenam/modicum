@@ -3,6 +3,9 @@
 MODICUM predicts non-canonical DNA modifications in bacteriophage genomes by searching any given genome for tell-tale genes found in bacteriophage DNA modification pathways. The genes involved in each pathway have been curated from literature and will be updated (probably not-so-regularly). The tool is only as good as my reading of the literature as of 2/17/2026.
 This tool can also technically support automated detection of any curated pathways of your choice so long as you make a mapping file. More on that below.
 
+<img width="2523" height="1024" alt="Screenshot 2026-03-16 152108" src="https://github.com/user-attachments/assets/2f35b628-7f17-4def-85d4-4f01bf62f814" />
+
+
 ## Supported Pathways
 
 *   **dZ (2-aminoadenine)**: PurZ pathway.
@@ -144,5 +147,7 @@ The `Marker/Accessory` field should contain either Marker or Accessory depending
 ## Citation
 
 Please cite the repository if used (publication in works). Also cite PFAM/NCBI, the makers of EnVhog, HMMER3, HH-suite and the papers which I used to curate the database (adding soon)
+
+The phage drawings above are made by BioRender and I think I'm supposed to say that.
 
 *This code hasn’t been heavily benchmarked yet or tested. There are probably a lot of bugs and lots of things left incomplete. Also note that a lot of this code was written with the help of Google Gemini. I will add citations for the pathways that this information was drawn from soon.*
