@@ -73,7 +73,7 @@ def run_pyhmmer_scan(fasta_path, hmm_db_path, min_coverage=0.8):
         hmms = list(hmm_file)
         
     for hmm, top_hits in zip(hmms, pyhmmer.hmmsearch(hmms, sequences)):
-        raw_id = hmm.accession.decode() if hmm.accession else hmm.name.decode()
+        raw_id = hmm.accession if hmm.accession else hmm.name
         hmm_id_base = raw_id.split('.')[0]
         hmm_length = hmm.M 
         
@@ -87,7 +87,7 @@ def run_pyhmmer_scan(fasta_path, hmm_db_path, min_coverage=0.8):
                 coverage = len(covered_positions) / hmm_length
                 
                 if coverage >= min_coverage:
-                    seq_id = hit.name.decode()
+                    seq_id = hit.name
                     hits_dict[seq_id].append((hmm_id_base, hit.evalue, hit.score, coverage))
                     
     return hits_dict
