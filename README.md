@@ -50,6 +50,16 @@ mamba create -n modicum -c conda-forge -c bioconda python biopython matplotlib p
 mamba activate modicum
 ```
 
+These are the versions of the dependencies that Modicum has currently been tested with:
+```
+python 3.13.13
+biopython 1.87
+matplotlib 3.10.9
+plotly 6.6.0
+pyhmmer 0.12.0
+hmmer 3.4
+```
+
 ### 2. Script and Databases
 
 Download the ```modicum.py``` python script and the ```/latest_hmm_db/``` folder using either git or manual download
