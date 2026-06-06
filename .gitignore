@@ -1,2 +1,4 @@
 misc/
 old_hmm_dbs/
+__pycache__/
+other_tools/__pycache__
