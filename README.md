@@ -87,7 +87,7 @@ These protein fasta files can be generated via Pharokka, Prodigal or Prodigal-gv
 ### Running the Tool
 
 ```bash
-python modicum.py -i phages.faa -d latest_hmm_db/pfam_ncbi.hmm -m latest_hmm_db/pfam_ncbi_map.tsv -o modicum_results -c 0.8
+python modicum.py -i phages.faa -d latest_hmm_db/envhogs_dnamods_v4.hmm -m latest_hmm_db/envhogs_dnamods_v4.3_map.tsv -o modicum_results
 ```
 
 ### Arguments
