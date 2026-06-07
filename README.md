@@ -1,6 +1,6 @@
 # MODICUM: Predicting DNA modifications in bacteriophage genomes by base biosynthetic pathway analysis
 
-MODICUM predicts non-canonical DNA modifications in bacteriophage genomes by searching any given genome for tell-tale genes found in bacteriophage DNA modification pathways. The genes involved in each pathway have been curated from literature and will be updated (probably not-so-regularly). The tool is only as good as my reading of the literature as of 2/17/2026.
+MODICUM predicts non-canonical DNA modifications in bacteriophage genomes by searching any given genome for tell-tale genes found in bacteriophage DNA modification pathways. The genes involved in each pathway have been curated from literature and will be updated (probably not-so-regularly). The tool is only as good as my reading of the literature as of 6/7/2026.
 This tool can also technically support automated detection of any curated pathways of your choice so long as you make a mapping file. More on that below.
 
 <img width="2523" height="1024" alt="Screenshot 2026-03-16 152108" src="https://github.com/user-attachments/assets/2f35b628-7f17-4def-85d4-4f01bf62f814" />
@@ -10,7 +10,7 @@ This tool can also technically support automated detection of any curated pathwa
 
 *   **dZ (2-aminoadenine)**: PurZ pathway.
 *   **7-dG (7-deazaguanine)**: DpdA/Que cluster.
-*   **5(hm)Y**: Thymidylate synthase-like genes; Hydroxymethylated, hydroxylated or methylated pyrimidines + glycosylation. With the latest version it will now also predict whether the modification is 5hmdU, 5hmdC, 5mdC or 5hdC by inspecting key catalytic residues.
+*   **5(hm)dY**: Thymidylate synthase-like genes; Hydroxymethylated, hydroxylated or methylated pyrimidines + glycosylation. With the latest version it will now also predict whether the modification is 5hmdU, 5hmdC, 5mdC or 5hdC by inspecting key catalytic residues.
 *   **dU (Deoxyuracil)**: UGI / dCMP deaminase / Pyrophosphotases (This is perhaps the weakest and hardest pathway prediction. There aren't any good marker genes or accessory genes that are unique to dU phages and so prediction is difficult. Lots of false positives). This will almost always be given putative status
 *   **dI (Deoxyinosine)**: dGMP_reductase / dAMP_deaminase (not tested; this is perhaps the second weakest prediction 1) because the pathway has not been mechanistically proven and 2) because there are a fair number of false positives). This will almost always be given putative status
 *   **Momylation**: Mu-like Mom.
