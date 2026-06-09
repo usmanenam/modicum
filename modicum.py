@@ -1,6 +1,7 @@
 import argparse
 import sys
 import os
+import gzip
 import csv
 import re
 from collections import defaultdict, Counter
@@ -110,57 +111,123 @@ def load_hmm_mapping(tsv_path):
     print(f"[*] Loaded mappings for {len(hmm_map)} unique HMM profiles from {tsv_path}")
     return hmm_map, total_acc_per_pathway, child_to_parent
 
-def parse_fasta_into_genomes(fasta_path):
-    """Groups sequences by parent genome/phage ID based on FASTA headers."""
-    phage_groups = defaultdict(list)
-    for seq in SeqIO.parse(fasta_path, "fasta"):
-        parts = seq.id.rsplit('_', 1)
-        if len(parts) > 1 and parts[1].isdigit():
-            phage_id = parts[0]
-        else:
-            phage_id = os.path.basename(fasta_path).rsplit('.', 1)[0]
-        phage_groups[phage_id].append(seq)
+def count_sequences(fasta_path):
+    """Counts the number of sequences (lines starting with '>') in a FASTA/FAA file in a memory-efficient way."""
+    is_gzip = False
+    try:
+        with open(fasta_path, 'rb') as f:
+            magic = f.read(2)
+            is_gzip = (magic == b'\x1f\x8b')
+    except Exception:
+        pass
     
-    print(f"[*] Parsed {sum(len(v) for v in phage_groups.values())} sequences across {len(phage_groups)} genomes.")
-    return phage_groups
+    open_func = gzip.open if is_gzip else open
+    count = 0
+    with open_func(fasta_path, 'rb') as f:
+        found = False
+        last_char = b''
+        while True:
+            chunk = f.read(65536)
+            if not chunk:
+                break
+            idx = chunk.find(b'>')
+            if idx != -1:
+                count = 1
+                found = True
+                count += chunk[idx+1:].count(b'\n>')
+                last_char = chunk[-1:]
+                break
+        
+        if found:
+            while True:
+                chunk = f.read(65536)
+                if not chunk:
+                    break
+                if last_char == b'\n' and chunk.startswith(b'>'):
+                    count += 1
+                count += chunk.count(b'\n>')
+                last_char = chunk[-1:]
+    return count
+
+def parse_fasta_into_genomes(fasta_path, all_hmm_hits):
+    """Groups sequences by parent genome/phage ID based on FASTA headers, storing only sequences with HMM hits in memory."""
+    phage_groups = defaultdict(list)
+    all_phages = []
+    seen_phages = set()
+    total_seqs = 0
+    
+    is_gzip = False
+    try:
+        with open(fasta_path, 'rb') as f:
+            magic = f.read(2)
+            is_gzip = (magic == b'\x1f\x8b')
+    except Exception:
+        pass
+        
+    open_func = gzip.open if is_gzip else open
+    with open_func(fasta_path, "rt", encoding="utf-8", errors="ignore") as f_in:
+        for seq in SeqIO.parse(f_in, "fasta"):
+            total_seqs += 1
+            parts = seq.id.rsplit('_', 1)
+            if len(parts) > 1 and parts[1].isdigit():
+                phage_id = parts[0]
+            else:
+                phage_id = os.path.basename(fasta_path).rsplit('.', 1)[0]
+                
+            if phage_id not in seen_phages:
+                seen_phages.add(phage_id)
+                all_phages.append(phage_id)
+                
+            if seq.id in all_hmm_hits:
+                phage_groups[phage_id].append(seq)
+    
+    print(f"[*] Parsed {total_seqs} sequences across {len(all_phages)} genomes.")
+    return phage_groups, all_phages
 
 def run_pyhmmer_scan(fasta_path, hmm_db_path, min_coverage=0.8):
     """Runs pyhmmer and extracts aligned residues per HMM match state coordinate position."""
     hits_dict = defaultdict(list)
     
-    with pyhmmer.easel.SequenceFile(fasta_path, digital=True) as seq_file:
-        sequences = list(seq_file)
+    total_seqs = count_sequences(fasta_path)
+    if total_seqs == 0:
+        return hits_dict
         
     with pyhmmer.plan7.HMMFile(hmm_db_path) as hmm_file:
         hmms = list(hmm_file)
         
-    for hmm, top_hits in zip(hmms, pyhmmer.hmmsearch(hmms, sequences)):
-        raw_id = hmm.accession if hmm.accession else hmm.name
-        hmm_id_base = raw_id.split('.')[0]
-        hmm_length = hmm.M 
-        
-        for hit in top_hits:
-            if hit.included: 
-                covered_positions = set()
-                hmm_residues = {}
+    with pyhmmer.easel.SequenceFile(fasta_path, digital=True) as seq_file:
+        while True:
+            seq_block = seq_file.read_block(sequences=100000)
+            if not seq_block:
+                break
                 
-                for domain in hit.domains:
-                    if domain.included:
-                        covered_positions.update(range(domain.alignment.hmm_from, domain.alignment.hmm_to + 1))
+            for hmm, top_hits in zip(hmms, pyhmmer.hmmsearch(hmms, seq_block, Z=total_seqs, domZ=None)):
+                raw_id = hmm.accession if hmm.accession else hmm.name
+                hmm_id_base = raw_id.split('.')[0]
+                hmm_length = hmm.M 
+                
+                for hit in top_hits:
+                    if hit.included: 
+                        covered_positions = set()
+                        hmm_residues = {}
                         
-                        # Map HMM positions directly to aligned target residues
-                        position = domain.alignment.hmm_from
-                        for hmm_letter, amino_acid in zip(domain.alignment.hmm_sequence, domain.alignment.target_sequence):
-                            if hmm_letter != ".":
-                                hmm_residues[position] = amino_acid
-                                position += 1
-                
-                coverage = len(covered_positions) / hmm_length
-                
-                if coverage >= min_coverage:
-                    seq_id = hit.name
-                    hits_dict[seq_id].append((hmm_id_base, hit.evalue, hit.score, coverage, hmm_residues))
-                    
+                        for domain in hit.domains:
+                            if domain.included:
+                                covered_positions.update(range(domain.alignment.hmm_from, domain.alignment.hmm_to + 1))
+                                
+                                # Map HMM positions directly to aligned target residues
+                                position = domain.alignment.hmm_from
+                                for hmm_letter, amino_acid in zip(domain.alignment.hmm_sequence, domain.alignment.target_sequence):
+                                    if hmm_letter != ".":
+                                        hmm_residues[position] = amino_acid
+                                        position += 1
+                        
+                        coverage = len(covered_positions) / hmm_length
+                        
+                        if coverage >= min_coverage:
+                            seq_id = hit.name
+                            hits_dict[seq_id].append((hmm_id_base, hit.evalue, hit.score, coverage, hmm_residues))
+                            
     return hits_dict
 
 def analyze_single_phage(phage_id, proteins, all_hmm_hits, active_hmm_map, total_acc_per_pathway, child_to_parent):
@@ -492,13 +559,13 @@ if __name__ == "__main__":
     print(f"[*] Scanning {args.input} against {args.database} with >= {args.coverage*100}% coverage threshold...")
     all_hmm_hits = run_pyhmmer_scan(args.input, args.database, min_coverage=args.coverage)
 
-    print("[*] Analyzing pathways...")
-    phage_groups = parse_fasta_into_genomes(args.input)
+    phage_groups, all_phages = parse_fasta_into_genomes(args.input, all_hmm_hits)
     
     final_results = []
     all_hit_sequences = []
     
-    for phage_id, proteins in phage_groups.items():
+    for phage_id in all_phages:
+        proteins = phage_groups[phage_id]
         result = analyze_single_phage(phage_id, proteins, all_hmm_hits, active_hmm_map, total_acc_per_pathway, child_to_parent)
         final_results.append(result)
         all_hit_sequences.extend(result['Annotated_Seqs'])
