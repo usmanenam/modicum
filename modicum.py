@@ -481,12 +481,11 @@ def build_sankey_plot(final_results, output_file, child_to_parent):
     plt.rcParams['font.sans-serif'] = ['DejaVu Sans', 'Arial', 'Helvetica', 'Liberation Sans', 'sans-serif']
     plt.rcParams['text.color'] = '#2D3748'
 
-    fig, ax = plt.subplots(figsize=(10, 6), dpi=300)
+    fig, ax = plt.subplots(figsize=(10, 6), dpi=600)
     fig.patch.set_facecolor('#F7FAFC')
     ax.set_facecolor('#F7FAFC')
 
-    import colorsys
-    from matplotlib.colors import ListedColormap, to_hex
+    from matplotlib.colors import LinearSegmentedColormap, ListedColormap, to_hex
     
     all_nodes = set()
     for src, des, count in flows:
@@ -494,32 +493,38 @@ def build_sankey_plot(final_results, output_file, child_to_parent):
         all_nodes.add(des)
     num_nodes = max(len(all_nodes), 1)
     
-    hues = [i / num_nodes for i in range(num_nodes)]
-    ggplot_colors = []
-    for h in hues:
-        # ggplot default-like colors: high chroma, medium/light luminance
-        r, g, b = colorsys.hls_to_rgb(h, 0.62, 0.72)
-        ggplot_colors.append(to_hex((r, g, b)))
+    base_colors = [
+        '#1b4965', '#e2b13c', '#457b9d', '#e9c46a', 
+        '#1d3557', '#f2b963', '#62b6cb', '#fcc647', 
+        '#91b3d5', '#a8dadc', '#bee9e8'
+    ]
+    
+    if num_nodes <= len(base_colors):
+        colors_list = base_colors[:num_nodes]
+    else:
+        cmap_temp = LinearSegmentedColormap.from_list('blue_yellow_custom', base_colors, N=num_nodes)
+        colors_list = [to_hex(cmap_temp(i / (num_nodes - 1))) for i in range(num_nodes)]
         
-    custom_cmap = ListedColormap(ggplot_colors)
+    custom_cmap = ListedColormap(colors_list)
 
     s = Sankey(
         flows=flows,
         align_y='tree clamp', # Tree clamp alignment groups node structures nicely
         flow_color_mode='source', # Blends ribbons automatically based on originating node
-        flow_color_mode_alpha=0.25, # Soft flow opacity for clean layering
+        flow_color_mode_alpha=0.45, # Soft flow opacity for clean layering
         cmap=custom_cmap,
         node_width=0.025,
         node_opts={
             'edgecolor': 'white', # White border separates node from flows
             'linewidth': 1.5,
-            'label_opts': {'fontsize': 9, 'weight': 'normal', 'color': '#4A5568'}
+            'label_opts': {'fontsize': 12, 'weight': 'normal', 'color': '#4A5568'}
         }
     )
 
     # Adjust node label positions to prevent overlapping with flow ribbons
     for level, node_level in enumerate(s.nodes):
         for node in node_level:
+            node.label_format = '{label} ({value:,.0f})'
             if level == 0:
                 node.label_pos = 'left'
                 node.label_pad_x = 0.015
