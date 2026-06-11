@@ -537,7 +537,7 @@ def build_sankey_plot(final_results, output_file, child_to_parent):
     unknown_count = sum(1 for res in final_results if res.get('Prediction') == "Unknown")
     ax.set_title("DNA Modification Pathway Predictions", 
                  fontsize=15, pad=15, fontweight='normal', color='#1A202C', loc='left')
-    ax.text(0.5, -0.05, f"Total Unclassified Genomes: {unknown_count}", 
+    ax.text(0.5, -0.05, f"Genomes with no MODICUM classification: {unknown_count}", 
             transform=ax.transAxes, ha='center', fontsize=14, color='#4A5568', fontweight='normal')
 
     # Remove axis spines and ticks while keeping the background color panel
@@ -551,7 +551,7 @@ def build_sankey_plot(final_results, output_file, child_to_parent):
     print(f"[*] Sankey plot written to: {output_file}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Modicum: Dynamic DNA Modification Pathway Predictor")
+    parser = argparse.ArgumentParser(description="MODICUM: Dynamic HMM Pathway Predictor (designed originally for DNA modifications)")
     parser.add_argument("-i", "--input", required=True, help="Input FASTA of phage proteins")
     parser.add_argument("-d", "--database", required=True, help="HMM database (.hmm file)")
     parser.add_argument("-m", "--map", required=True, help="4-to-7 column TSV mapping file")
