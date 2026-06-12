@@ -535,7 +535,7 @@ def build_sankey_plot(final_results, output_file, child_to_parent):
     s.draw(ax=ax)
 
     unknown_count = sum(1 for res in final_results if res.get('Prediction') == "Unknown")
-    ax.set_title("DNA Modification Pathway Predictions", 
+    ax.set_title("MODICUM pathway predictions", 
                  fontsize=15, pad=15, fontweight='normal', color='#1A202C', loc='left')
     ax.text(0.5, -0.05, f"Genomes with no MODICUM classification: {unknown_count}", 
             transform=ax.transAxes, ha='center', fontsize=14, color='#4A5568', fontweight='normal')
